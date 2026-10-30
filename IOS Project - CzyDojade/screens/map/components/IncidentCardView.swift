@@ -3,8 +3,7 @@ import SwiftUI
 struct IncidentCardView: View {
 
     let incident: Incident
-
-    private let cream = Color(red: 0.99, green: 0.90, blue: 0.80)
+    var onEdit: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -29,7 +28,21 @@ struct IncidentCardView: View {
                     badge(icon: "tram.fill", text: incident.line)
                         .padding(12)
                 }
+                .overlay(alignment: .topLeading) {
+                    if let onEdit {
+                        Button(action: onEdit) {
+                            Image(systemName: "pencil")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(.black)
+                                .frame(width: 32, height: 32)
+                                .background(Color.cream, in: Circle())
+                                .overlay(Circle().stroke(.black.opacity(0.7), lineWidth: 1))
+                        }
+                        .padding(12)
+                    }
+                }
 
+            // Opis
             VStack(alignment: .leading, spacing: 6) {
                 Text(incident.location)
                     .font(.system(size: 17, weight: .semibold))
@@ -41,7 +54,7 @@ struct IncidentCardView: View {
                     .lineLimit(2)
 
                 HStack(spacing: 10) {
-                    Text(incident.time)
+                    Text(incident.timeText)
                         .font(.system(size: 14))
                         .foregroundStyle(.black.opacity(0.8))
 
@@ -67,12 +80,12 @@ struct IncidentCardView: View {
         .foregroundStyle(.black.opacity(0.85))
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
-        .background(cream, in: Capsule())
+        .background(Color.cream, in: Capsule())
         .overlay(Capsule().stroke(.black.opacity(0.7), lineWidth: 1))
     }
 }
 
 #Preview {
-    IncidentCardView(incident: MapViewModel.sample[0])
+    IncidentCardView(incident: MapViewModel.sample[0], onEdit: {})
         .padding()
 }

@@ -6,7 +6,7 @@ struct Incident: Identifiable, Hashable {
     var line: String
     var location: String
     var description: String
-    var time: String
+    var date: Date
     var isRecent: Bool
     var imageURL: URL?
     var latitude: Double
@@ -16,12 +16,16 @@ struct Incident: Identifiable, Hashable {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 
+    var timeText: String {
+        date.formatted(date: .omitted, time: .shortened)
+    }
+
     init(
         id: UUID = UUID(),
         line: String,
         location: String,
         description: String,
-        time: String,
+        date: Date = .now,
         isRecent: Bool = false,
         imageURL: URL? = nil,
         latitude: Double,
@@ -31,7 +35,7 @@ struct Incident: Identifiable, Hashable {
         self.line = line
         self.location = location
         self.description = description
-        self.time = time
+        self.date = date
         self.isRecent = isRecent
         self.imageURL = imageURL
         self.latitude = latitude
