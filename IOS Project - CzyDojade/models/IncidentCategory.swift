@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum IncidentCategory: String, CaseIterable, Identifiable, Hashable {
+enum IncidentCategory: String, CaseIterable, Identifiable, Hashable, Codable {
     case breakdown
     case blockage
     case delay

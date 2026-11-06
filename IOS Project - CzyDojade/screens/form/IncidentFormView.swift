@@ -1,23 +1,25 @@
 import SwiftUI
 import MapKit
+import SwiftData
 
 struct IncidentFormView: View {
 
     @State private var viewModel: IncidentFormViewModel
     @State private var showDeleteConfirmation = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
 
     let onSave: (Incident) -> Void
-    let onDelete: ((Incident) -> Void)?
 
     init(
         mode: IncidentFormMode,
-        onSave: @escaping (Incident) -> Void,
-        onDelete: ((Incident) -> Void)? = nil
+        userCoordinate: CLLocationCoordinate2D? = nil,
+        onSave: @escaping (Incident) -> Void = { _ in }
     ) {
-        _viewModel = State(initialValue: IncidentFormViewModel(mode: mode))
+        _viewModel = State(
+            initialValue: IncidentFormViewModel(mode: mode, userCoordinate: userCoordinate)
+        )
         self.onSave = onSave
-        self.onDelete = onDelete
     }
 
     var body: some View {
@@ -27,20 +29,22 @@ struct IncidentFormView: View {
                 placeSection
                 eventSection
                 imageSection
-                if viewModel.isEditing, onDelete != nil {
+                if viewModel.isEditing {
                     deleteSection
                 }
             }
             .scrollDismissesKeyboard(.interactively)
             .navigationTitle(viewModel.title)
             .navigationBarTitleDisplayMode(.inline)
+            .task { viewModel.resolveInitialAddress() }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Anuluj") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Zapisz") {
-                        onSave(viewModel.makeIncident())
+                        let saved = viewModel.save(in: context)
+                        onSave(saved)
                         dismiss()
                     }
                     .disabled(!viewModel.isValid)
@@ -52,23 +56,36 @@ struct IncidentFormView: View {
                 titleVisibility: .visible
             ) {
                 Button("Usuń", role: .destructive) {
-                    onDelete?(viewModel.makeIncident())
+                    viewModel.delete(in: context)
                     dismiss()
                 }
             }
         }
     }
 
-
     private var vehicleSection: some View {
         Section("Pojazd") {
-            TextField("Linia, np. Linia 23 (3312)", text: $viewModel.line)
+            LabeledContent("Linia") {
+                TextField("np. 23", text: $viewModel.line)
+                    .multilineTextAlignment(.trailing)
+                    .textInputAutocapitalization(.characters)
+                    .autocorrectionDisabled()
+            }
+            LabeledContent("Numer pojazdu") {
+                TextField("np. 3312 (opcjonalnie)", text: $viewModel.vehicleNumber)
+                    .multilineTextAlignment(.trailing)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+            }
         }
     }
 
     private var placeSection: some View {
         Section {
-            TextField("Lokalizacja, np. Centrum, Legnicka 24", text: $viewModel.location)
+            LabeledContent("Adres") {
+                TextField("Uzupełnia się z mapy", text: $viewModel.location, axis: .vertical)
+                    .multilineTextAlignment(.trailing)
+            }
 
             MapReader { proxy in
                 Map(initialPosition: .region(
@@ -86,7 +103,7 @@ struct IncidentFormView: View {
                 }
                 .onTapGesture { point in
                     if let coordinate = proxy.convert(point, from: .local) {
-                        viewModel.coordinate = coordinate
+                        viewModel.setCoordinate(coordinate)
                     }
                 }
             }
@@ -96,7 +113,7 @@ struct IncidentFormView: View {
         } header: {
             Text("Miejsce")
         } footer: {
-            Text("Dotknij mapy, aby ustawić pinezkę.")
+            Text("Dotknij mapy, aby przesunąć pinezkę. Adres uzupełni się sam.")
         }
     }
 
@@ -159,13 +176,11 @@ struct IncidentFormView: View {
 }
 
 #Preview("Nowe") {
-    IncidentFormView(mode: .create, onSave: { _ in })
+    IncidentFormView(mode: .create)
+        .modelContainer(for: Incident.self, inMemory: true)
 }
 
 #Preview("Edycja") {
-    IncidentFormView(
-        mode: .edit(MapViewModel.sample[0]),
-        onSave: { _ in },
-        onDelete: { _ in }
-    )
+    IncidentFormView(mode: .edit(Incident.makeSamples()[0]))
+        .modelContainer(for: Incident.self, inMemory: true)
 }

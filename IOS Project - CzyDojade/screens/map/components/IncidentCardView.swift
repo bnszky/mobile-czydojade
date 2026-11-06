@@ -39,8 +39,7 @@ struct IncidentCardView: View {
             }
             .clipped()
             .overlay(alignment: .topTrailing) {
-                CreamBadge(icon: "tram.fill", text: incident.line)
-                    .padding(Theme.Spacing.cardOverlay)
+                CreamBadge(icon: "tram.fill", text: incident.vehicleLabel).padding(Theme.Spacing.cardOverlay)
             }
             .overlay(alignment: .topLeading) {
                 if let onEdit {
@@ -63,7 +62,7 @@ struct IncidentCardView: View {
                 .font(.system(size: Theme.FontSize.cardTitle, weight: .semibold))
                 .foregroundStyle(.black)
 
-            Text(incident.description)
+            Text(incident.details)
                 .font(.system(size: Theme.FontSize.cardBody))
                 .foregroundStyle(.black.opacity(0.85))
                 .lineLimit(2)
@@ -86,6 +85,6 @@ struct IncidentCardView: View {
 }
 
 #Preview {
-    IncidentCardView(incident: MapViewModel.sample[0], onEdit: {})
+    IncidentCardView(incident: Incident.makeSamples()[0], onEdit: {})
         .padding()
 }
