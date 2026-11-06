@@ -3,11 +3,11 @@ import CoreLocation
 
 struct Incident: Identifiable, Hashable {
     let id: UUID
+    var category: IncidentCategory
     var line: String
     var location: String
     var description: String
     var date: Date
-    var isRecent: Bool
     var imageURL: URL?
     var latitude: Double
     var longitude: Double
@@ -22,21 +22,21 @@ struct Incident: Identifiable, Hashable {
 
     init(
         id: UUID = UUID(),
+        category: IncidentCategory = .other,
         line: String,
         location: String,
         description: String,
         date: Date = .now,
-        isRecent: Bool = false,
         imageURL: URL? = nil,
         latitude: Double,
         longitude: Double
     ) {
         self.id = id
+        self.category = category
         self.line = line
         self.location = location
         self.description = description
         self.date = date
-        self.isRecent = isRecent
         self.imageURL = imageURL
         self.latitude = latitude
         self.longitude = longitude

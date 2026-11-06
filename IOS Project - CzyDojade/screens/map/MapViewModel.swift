@@ -56,15 +56,16 @@ final class MapViewModel {
         let placeholder = URL(string: "https://visitwroclaw.eu/wp-content/uploads/2025/07/Wroclaw-z-tramwajem-1.png")
         return [
             Incident(
+                category: .breakdown,
                 line: "Linia 23 (3312)",
                 location: "Centrum, Plac Grunwaldzki 24",
                 description: "Tramwaj się wykoleił",
                 date: today(17, 12),
-                isRecent: true,
                 imageURL: placeholder,
                 latitude: 51.1100, longitude: 17.0620
             ),
             Incident(
+                category: .blockage,
                 line: "Linia 20 (1254)",
                 location: "Centrum, Legnicka 24",
                 description: "Magnolia cała zablokowana, w dwóch kierunkach blok",
@@ -73,11 +74,11 @@ final class MapViewModel {
                 latitude: 51.1180, longitude: 17.0170
             ),
             Incident(
+                category: .vehicleCondition,
                 line: "Linia 23 (3312)",
                 location: "Krzyki, Ołtaszyńska 24",
                 description: "Autobus się pali, straż jest ale nie gasi",
                 date: today(18, 54),
-                isRecent: true,
                 imageURL: placeholder,
                 latitude: 51.0780, longitude: 17.0300
             )

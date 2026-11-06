@@ -12,7 +12,10 @@ struct MapScreenView: View {
         Map(position: $position) {
             ForEach(viewModel.incidents) { incident in
                 Annotation(incident.location, coordinate: incident.coordinate) {
-                    IncidentMarker(isSelected: viewModel.selectedID == incident.id) {
+                    IncidentMarker(
+                        category: incident.category,
+                        isSelected: viewModel.selectedID == incident.id
+                    ) {
                         viewModel.selectedID = incident.id
                     }
                 }

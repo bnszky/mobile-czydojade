@@ -73,9 +73,11 @@ struct IncidentCardView: View {
                     .font(.system(size: Theme.FontSize.cardBody))
                     .foregroundStyle(.black.opacity(0.8))
 
-                if incident.isRecent {
-                    CreamBadge(icon: "exclamationmark.circle", text: "Ostatnie")
-                }
+                CreamBadge(
+                    icon: incident.category.systemImage,
+                    text: incident.category.title,
+                    tint: incident.category.color
+                )
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

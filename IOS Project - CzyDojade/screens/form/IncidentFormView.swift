@@ -79,10 +79,10 @@ struct IncidentFormView: View {
                 )) {
                     Marker(
                         viewModel.location.isEmpty ? "Zgłoszenie" : viewModel.location,
-                        systemImage: "exclamationmark.triangle.fill",
+                        systemImage: viewModel.category.systemImage,
                         coordinate: viewModel.coordinate
                     )
-                    .tint(.red)
+                    .tint(viewModel.category.color)
                 }
                 .onTapGesture { point in
                     if let coordinate = proxy.convert(point, from: .local) {
@@ -102,10 +102,15 @@ struct IncidentFormView: View {
 
     private var eventSection: some View {
         Section("Zdarzenie") {
+            Picker("Kategoria", selection: $viewModel.category) {
+                ForEach(IncidentCategory.allCases) { category in
+                    Label(category.title, systemImage: category.systemImage)
+                        .tag(category)
+                }
+            }
             TextField("Opis", text: $viewModel.details, axis: .vertical)
                 .lineLimit(2...4)
             DatePicker("Kiedy", selection: $viewModel.date)
-            Toggle("Oznacz jako ostatnie", isOn: $viewModel.isRecent)
         }
     }
 

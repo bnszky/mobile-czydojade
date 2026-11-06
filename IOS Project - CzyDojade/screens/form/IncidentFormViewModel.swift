@@ -24,7 +24,7 @@ final class IncidentFormViewModel {
     var location: String
     var details: String
     var date: Date
-    var isRecent: Bool
+    var category: IncidentCategory
     var imageURLText: String
     var coordinate: CLLocationCoordinate2D
 
@@ -37,7 +37,7 @@ final class IncidentFormViewModel {
             location = ""
             details = ""
             date = .now
-            isRecent = true
+            category = .other
             imageURLText = ""
             coordinate = MapViewModel.wroclawRegion.center
         case .edit(let incident):
@@ -46,7 +46,7 @@ final class IncidentFormViewModel {
             location = incident.location
             details = incident.description
             date = incident.date
-            isRecent = incident.isRecent
+            category = incident.category
             imageURLText = incident.imageURL?.absoluteString ?? ""
             coordinate = incident.coordinate
         }
@@ -80,11 +80,11 @@ final class IncidentFormViewModel {
         let text = trimmed(imageURLText)
         return Incident(
             id: id,
+            category: category,
             line: trimmed(line),
             location: trimmed(location),
             description: trimmed(details),
             date: date,
-            isRecent: isRecent,
             imageURL: text.isEmpty ? nil : URL(string: text),
             latitude: coordinate.latitude,
             longitude: coordinate.longitude
