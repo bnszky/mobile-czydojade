@@ -90,8 +90,8 @@ struct IncidentFormView: View {
                     }
                 }
             }
-            .frame(height: 200)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .frame(height: Theme.Size.cardImageHeight)
+            .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.formMedia, style: .continuous))
             .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
         } header: {
             Text("Miejsce")
@@ -131,7 +131,7 @@ struct IncidentFormView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 140)
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.formMedia, style: .continuous))
             }
         } header: {
             Text("Zdjęcie (opcjonalne)")

@@ -6,7 +6,7 @@ struct MapControlButtons: View {
     let onToggleLayers: () -> Void
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: Theme.Spacing.mapControls) {
             circleButton(systemName: "location.fill", action: onLocate)
             circleButton(systemName: "square.2.layers.3d", action: onToggleLayers)
         }
@@ -15,11 +15,16 @@ struct MapControlButtons: View {
     private func circleButton(systemName: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemName)
-                .font(.system(size: 18, weight: .medium))
+                .font(.system(size: Theme.FontSize.mapControlIcon, weight: .medium))
                 .foregroundStyle(.blue)
-                .frame(width: 50, height: 50)
+                .frame(width: Theme.Size.mapControl, height: Theme.Size.mapControl)
                 .background(.white, in: Circle())
-                .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+                .shadow(
+                    color: .black.opacity(Theme.Shadow.lightOpacity),
+                    radius: Theme.Shadow.lightRadius,
+                    x: 0,
+                    y: Theme.Shadow.y
+                )
         }
     }
 }

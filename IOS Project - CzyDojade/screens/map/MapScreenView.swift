@@ -33,12 +33,12 @@ struct MapScreenView: View {
     }
 
     private var bottomArea: some View {
-        VStack(alignment: .trailing, spacing: 14) {
+        VStack(alignment: .trailing, spacing: Theme.Spacing.mapBottomStack) {
             MapControlButtons(
                 onLocate: { withAnimation { position = .region(MapViewModel.wroclawRegion) } },
                 onToggleLayers: { showSatellite.toggle() }
             )
-            .padding(.trailing, 16)
+            .padding(.trailing, Theme.Spacing.mapControlsTrailing)
 
             IncidentCarousel(
                 incidents: viewModel.incidents,
@@ -47,7 +47,7 @@ struct MapScreenView: View {
             )
 
             AppTabBar(selection: $tab, onAdd: { viewModel.startCreate() })
-                .padding(.top, 34)
+                .padding(.top, Theme.Spacing.tabBarTop)
         }
     }
 

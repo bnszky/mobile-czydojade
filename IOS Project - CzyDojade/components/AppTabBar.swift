@@ -16,22 +16,22 @@ struct AppTabBar: View {
             addButton
             tabItem(.list, icon: "list.bullet", title: "Lista")
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, Theme.Spacing.tabBarHorizontal)
+        .padding(.vertical, Theme.Spacing.tabBarVertical)
         .background(Color.cream, in: Capsule())
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Theme.Spacing.tabBarOuter)
     }
 
     private func tabItem(_ tab: AppTab, icon: String, title: String) -> some View {
         Button {
             selection = tab
         } label: {
-            VStack(spacing: 4) {
+            VStack(spacing: Theme.Spacing.tabItem) {
                 Image(systemName: icon)
-                    .font(.system(size: 22))
-                    .frame(height: 22)
+                    .font(.system(size: Theme.FontSize.tabIcon))
+                    .frame(height: Theme.FontSize.tabIcon)
                 Text(title)
-                    .font(.system(size: 11))
+                    .font(.system(size: Theme.FontSize.tabLabel))
             }
             .foregroundStyle(selection == tab ? Color.primary : Color.secondary)
             .frame(maxWidth: .infinity)
@@ -40,21 +40,26 @@ struct AppTabBar: View {
     }
 
     private var addButton: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: Theme.Spacing.tabItem) {
             Button(action: onAdd) {
                 Image(systemName: "plus")
-                    .font(.system(size: 26))
+                    .font(.system(size: Theme.FontSize.tabAddIcon))
                     .foregroundStyle(.black)
-                    .frame(width: 60, height: 60)
+                    .frame(width: Theme.Size.tabAdd, height: Theme.Size.tabAdd)
                     .background(Color.cream, in: Circle())
-                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+                    .shadow(
+                        color: .black.opacity(Theme.Shadow.lightOpacity),
+                        radius: Theme.Shadow.lightRadius,
+                        x: 0,
+                        y: Theme.Shadow.y
+                    )
             }
             .buttonStyle(.plain)
             .padding(.vertical, -19)
             .offset(y: -22)
 
             Text("Dodaj")
-                .font(.system(size: 11))
+                .font(.system(size: Theme.FontSize.tabLabel))
         }
         .foregroundStyle(.primary)
         .frame(maxWidth: .infinity)

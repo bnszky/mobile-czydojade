@@ -8,7 +8,7 @@ struct IncidentCarousel: View {
 
     var body: some View {
         ScrollView(.horizontal) {
-            LazyHStack(spacing: 12) {
+            LazyHStack(spacing: Theme.Spacing.carousel) {
                 ForEach(incidents) { incident in
                     IncidentCardView(incident: incident) {
                         onEdit(incident)

@@ -7,81 +7,79 @@ struct IncidentCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Color.gray.opacity(0.2)
-                .frame(height: 200)
-                .overlay {
-                    AsyncImage(url: incident.imageURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFill()
-                        case .failure:
-                            Image(systemName: "photo")
-                                .font(.largeTitle)
-                                .foregroundStyle(.secondary)
-                        default:
-                            ProgressView()
-                        }
-                    }
-                }
-                .clipped()
-                .overlay(alignment: .topTrailing) {
-                    badge(icon: "tram.fill", text: incident.line)
-                        .padding(12)
-                }
-                .overlay(alignment: .topLeading) {
-                    if let onEdit {
-                        Button(action: onEdit) {
-                            Image(systemName: "pencil")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundStyle(.black)
-                                .frame(width: 32, height: 32)
-                                .background(Color.cream, in: Circle())
-                                .overlay(Circle().stroke(.black.opacity(0.7), lineWidth: 1))
-                        }
-                        .padding(12)
-                    }
-                }
+            imageHeader
+            detailsSection
+        }
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card, style: .continuous))
+        .shadow(
+            color: .black.opacity(Theme.Shadow.cardOpacity),
+            radius: Theme.Shadow.cardRadius,
+            x: 0,
+            y: Theme.Shadow.cardY
+        )
+    }
 
-            // Opis
-            VStack(alignment: .leading, spacing: 6) {
-                Text(incident.location)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(.black)
-
-                Text(incident.description)
-                    .font(.system(size: 14))
-                    .foregroundStyle(.black.opacity(0.85))
-                    .lineLimit(2)
-
-                HStack(spacing: 10) {
-                    Text(incident.timeText)
-                        .font(.system(size: 14))
-                        .foregroundStyle(.black.opacity(0.8))
-
-                    if incident.isRecent {
-                        badge(icon: "exclamationmark.circle", text: "Ostatnie")
+    private var imageHeader: some View {
+        Color.gray.opacity(0.2)
+            .frame(height: Theme.Size.cardImageHeight)
+            .overlay {
+                AsyncImage(url: incident.imageURL) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    case .failure:
+                        Image(systemName: "photo")
+                            .font(.largeTitle)
+                            .foregroundStyle(.secondary)
+                    default:
+                        ProgressView()
                     }
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-        }
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 4)
+            .clipped()
+            .overlay(alignment: .topTrailing) {
+                CreamBadge(icon: "tram.fill", text: incident.line)
+                    .padding(Theme.Spacing.cardOverlay)
+            }
+            .overlay(alignment: .topLeading) {
+                if let onEdit {
+                    Button(action: onEdit) {
+                        Image(systemName: "pencil")
+                            .font(.system(size: Theme.FontSize.cardEditIcon, weight: .semibold))
+                            .foregroundStyle(.black)
+                            .frame(width: Theme.Size.cardEdit, height: Theme.Size.cardEdit)
+                            .background(Color.cream, in: Circle())
+                            .overlay(Circle().stroke(.black.opacity(0.7), lineWidth: 1))
+                    }
+                    .padding(Theme.Spacing.cardOverlay)
+                }
+            }
     }
 
-    private func badge(icon: String, text: String) -> some View {
-        HStack(spacing: 6) {
-            Image(systemName: icon)
-            Text(text)
+    private var detailsSection: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.cardText) {
+            Text(incident.location)
+                .font(.system(size: Theme.FontSize.cardTitle, weight: .semibold))
+                .foregroundStyle(.black)
+
+            Text(incident.description)
+                .font(.system(size: Theme.FontSize.cardBody))
+                .foregroundStyle(.black.opacity(0.85))
+                .lineLimit(2)
+
+            HStack(spacing: 10) {
+                Text(incident.timeText)
+                    .font(.system(size: Theme.FontSize.cardBody))
+                    .foregroundStyle(.black.opacity(0.8))
+
+                if incident.isRecent {
+                    CreamBadge(icon: "exclamationmark.circle", text: "Ostatnie")
+                }
+            }
         }
-        .font(.system(size: 12, weight: .medium))
-        .foregroundStyle(.black.opacity(0.85))
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(Color.cream, in: Capsule())
-        .overlay(Capsule().stroke(.black.opacity(0.7), lineWidth: 1))
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(Theme.Spacing.cardContent)
     }
 }
 
