@@ -33,6 +33,11 @@ struct MapScreenView: View {
         }
         .mapStyle(showSatellite ? .hybrid : .standard)
         .mapControls { }
+        .overlay {
+            if tab == .list {
+                IncidentListView(incidents: incidents, onSelect: { viewModel.startEdit($0) })
+            }
+        }
         .safeAreaInset(edge: .bottom, spacing: 0) { bottomArea }
         .navigationBarBackButtonHidden(true)
         .task {
@@ -56,17 +61,19 @@ struct MapScreenView: View {
 
     private var bottomArea: some View {
         VStack(alignment: .trailing, spacing: Theme.Spacing.mapBottomStack) {
-            MapControlButtons(
-                onLocate: { locateUser() },
-                onToggleLayers: { showSatellite.toggle() }
-            )
-            .padding(.trailing, Theme.Spacing.mapControlsTrailing)
+            if tab == .map {
+                MapControlButtons(
+                    onLocate: { locateUser() },
+                    onToggleLayers: { showSatellite.toggle() }
+                )
+                .padding(.trailing, Theme.Spacing.mapControlsTrailing)
 
-            IncidentCarousel(
-                incidents: incidents,
-                selectedID: $viewModel.selectedID,
-                onEdit: { viewModel.startEdit($0) }
-            )
+                IncidentCarousel(
+                    incidents: incidents,
+                    selectedID: $viewModel.selectedID,
+                    onEdit: { viewModel.startEdit($0) }
+                )
+            }
 
             AppTabBar(selection: $tab, onAdd: { viewModel.startCreate() })
                 .padding(.top, Theme.Spacing.tabBarTop)

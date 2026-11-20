@@ -120,10 +120,16 @@ struct IncidentFormView: View {
 
     private var eventSection: some View {
         Section("Zdarzenie") {
-            Picker("Kategoria", selection: $viewModel.category) {
-                ForEach(IncidentCategory.allCases) { category in
-                    Label(category.title, systemImage: category.systemImage)
-                        .tag(category)
+            LabeledContent("Kategoria") {
+                HStack {
+                    CategoryIcon(category: viewModel.category, size: Theme.Size.categoryIconSmall)
+                    Picker("Kategoria", selection: $viewModel.category) {
+                        ForEach(IncidentCategory.allCases) { category in
+                            Label(category.title, systemImage: category.systemImage)
+                                .tag(category)
+                        }
+                    }
+                    .labelsHidden()
                 }
             }
             TextField("Opis", text: $viewModel.details, axis: .vertical)

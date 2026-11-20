@@ -24,17 +24,16 @@ struct IncidentCard: View {
         IncidentPhoto(incident: incident)
             .frame(height: Theme.Size.cardImageHeight)
             .overlay(alignment: .topTrailing) {
-                CreamBadge(icon: "tram.fill", text: incident.vehicleLabel).padding(Theme.Spacing.cardOverlay)
+                InfoBadge(icon: "tram.fill", text: incident.vehicleLabel).padding(Theme.Spacing.cardOverlay)
             }
             .overlay(alignment: .topLeading) {
                 if let onEdit {
                     Button(action: onEdit) {
                         Image(systemName: "pencil")
                             .font(.system(size: Theme.FontSize.cardEditIcon, weight: .semibold))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Theme.Colors.accent)
                             .frame(width: Theme.Size.cardEdit, height: Theme.Size.cardEdit)
-                            .background(Color.cream, in: Circle())
-                            .overlay(Circle().stroke(.black.opacity(0.7), lineWidth: 1))
+                            .background(Theme.Colors.surface, in: Circle())
                     }
                     .padding(Theme.Spacing.cardOverlay)
                 }
@@ -57,7 +56,7 @@ struct IncidentCard: View {
                     .font(.system(size: Theme.FontSize.cardBody))
                     .foregroundStyle(.black.opacity(0.8))
 
-                CreamBadge(
+                InfoBadge(
                     icon: incident.category.systemImage,
                     text: incident.category.title,
                     tint: incident.category.color

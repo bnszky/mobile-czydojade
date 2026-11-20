@@ -24,13 +24,17 @@ final class Incident {
         date.formatted(date: .omitted, time: .shortened)
     }
 
+    var relativeTimeText: String {
+        date.formatted(.relative(presentation: .numeric, unitsStyle: .abbreviated))
+    }
+
     var vehicleLabel: String {
         vehicleNumber.isEmpty ? "Linia \(line)" : "Linia \(line) (\(vehicleNumber))"
     }
 
     init(
         id: UUID = UUID(),
-        category: IncidentCategory = .other,
+        category: IncidentCategory = .defaultCategory,
         line: String,
         vehicleNumber: String = "",
         location: String,

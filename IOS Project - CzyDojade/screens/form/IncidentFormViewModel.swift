@@ -46,7 +46,7 @@ final class IncidentFormViewModel {
         case .create:
             existing = nil
             resolvesAddressOnAppear = userCoordinate != nil
-            category = .other
+            category = .defaultCategory
             line = ""
             vehicleNumber = ""
             location = ""

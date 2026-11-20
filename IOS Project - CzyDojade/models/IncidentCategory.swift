@@ -8,6 +8,8 @@ enum IncidentCategory: String, CaseIterable, Identifiable, Hashable, Codable {
     case vehicleCondition
     case other
 
+    static let defaultCategory: IncidentCategory = .other
+
     var id: String { rawValue }
 
     var title: String {

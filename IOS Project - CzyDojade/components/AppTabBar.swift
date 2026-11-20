@@ -18,7 +18,7 @@ struct AppTabBar: View {
         }
         .padding(.horizontal, Theme.Spacing.tabBarHorizontal)
         .padding(.vertical, Theme.Spacing.tabBarVertical)
-        .background(Color.cream, in: Capsule())
+        .background(Theme.Colors.surface, in: Capsule())
         .padding(.horizontal, Theme.Spacing.tabBarOuter)
     }
 
@@ -33,7 +33,7 @@ struct AppTabBar: View {
                 Text(title)
                     .font(.system(size: Theme.FontSize.tabLabel))
             }
-            .foregroundStyle(selection == tab ? Color.primary : Color.secondary)
+            .foregroundStyle(selection == tab ? Theme.Colors.accent : Color.secondary)
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
@@ -44,9 +44,9 @@ struct AppTabBar: View {
             Button(action: onAdd) {
                 Image(systemName: "plus")
                     .font(.system(size: Theme.FontSize.tabAddIcon))
-                    .foregroundStyle(.black)
+                    .foregroundStyle(Theme.Colors.onAccent)
                     .frame(width: Theme.Size.tabAdd, height: Theme.Size.tabAdd)
-                    .background(Color.cream, in: Circle())
+                    .background(Theme.Colors.accent, in: Circle())
                     .shadow(
                         color: .black.opacity(Theme.Shadow.lightOpacity),
                         radius: Theme.Shadow.lightRadius,
