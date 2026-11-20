@@ -10,6 +10,7 @@ enum Theme {
         static let tabAdd: CGFloat = 60
         static let cardEdit: CGFloat = 32
         static let cardImageHeight: CGFloat = 200
+        static let formImagePreviewHeight: CGFloat = 200
         static let markerIcon: CGFloat = 14
         static let markerPadding: CGFloat = 8
     }
@@ -39,6 +40,14 @@ enum Theme {
         static let tabBarHorizontal: CGFloat = 12
         static let tabBarVertical: CGFloat = 10
         static let tabBarOuter: CGFloat = 20
+    }
+
+    enum Insets {
+        static let formMedia = EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0)
+    }
+
+    enum Opacity {
+        static let imagePlaceholder: Double = 0.2
     }
 
     enum Radius {

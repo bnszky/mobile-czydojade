@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct IncidentCardView: View {
+struct IncidentCard: View {
 
     let incident: Incident
     var onEdit: (() -> Void)? = nil
@@ -21,23 +21,8 @@ struct IncidentCardView: View {
     }
 
     private var imageHeader: some View {
-        Color.gray.opacity(0.2)
+        IncidentPhoto(incident: incident)
             .frame(height: Theme.Size.cardImageHeight)
-            .overlay {
-                AsyncImage(url: incident.imageURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure:
-                        Image(systemName: "photo")
-                            .font(.largeTitle)
-                            .foregroundStyle(.secondary)
-                    default:
-                        ProgressView()
-                    }
-                }
-            }
-            .clipped()
             .overlay(alignment: .topTrailing) {
                 CreamBadge(icon: "tram.fill", text: incident.vehicleLabel).padding(Theme.Spacing.cardOverlay)
             }
@@ -85,6 +70,6 @@ struct IncidentCardView: View {
 }
 
 #Preview {
-    IncidentCardView(incident: Incident.makeSamples()[0], onEdit: {})
+    IncidentCard(incident: Incident.makeSamples()[0], onEdit: {})
         .padding()
 }

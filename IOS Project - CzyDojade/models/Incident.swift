@@ -11,6 +11,7 @@ final class Incident {
     var location: String
     var details: String
     var date: Date
+    @Attribute(.externalStorage) var imageData: Data?
     var imageURL: URL?
     var latitude: Double
     var longitude: Double
@@ -35,6 +36,7 @@ final class Incident {
         location: String,
         details: String,
         date: Date = .now,
+        imageData: Data? = nil,
         imageURL: URL? = nil,
         latitude: Double,
         longitude: Double
@@ -46,6 +48,7 @@ final class Incident {
         self.location = location
         self.details = details
         self.date = date
+        self.imageData = imageData
         self.imageURL = imageURL
         self.latitude = latitude
         self.longitude = longitude

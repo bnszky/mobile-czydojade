@@ -1,6 +1,7 @@
 import SwiftUI
 import MapKit
 import Observation
+import PhotosUI
 import SwiftData
 
 enum IncidentFormMode: Identifiable {
@@ -23,6 +24,7 @@ final class IncidentFormViewModel {
     private let resolvesAddressOnAppear: Bool
 
     @ObservationIgnored private var geocodeTask: Task<Void, Never>?
+    @ObservationIgnored private var photoLoadTask: Task<Void, Never>?
 
     var category: IncidentCategory
     var line: String
@@ -30,8 +32,13 @@ final class IncidentFormViewModel {
     var location: String
     var details: String
     var date: Date
-    var imageURLText: String
     var coordinate: CLLocationCoordinate2D
+
+    var photoSelection: PhotosPickerItem?
+    private(set) var imageData: Data?
+    private(set) var imageURL: URL?
+    private(set) var isLoadingPhoto = false
+    private(set) var photoLoadFailed = false
 
     init(mode: IncidentFormMode, userCoordinate: CLLocationCoordinate2D? = nil) {
         self.mode = mode
@@ -45,7 +52,8 @@ final class IncidentFormViewModel {
             location = ""
             details = ""
             date = .now
-            imageURLText = ""
+            imageData = nil
+            imageURL = nil
             coordinate = userCoordinate ?? MapViewModel.wroclawRegion.center
         case .edit(let incident):
             existing = incident
@@ -56,7 +64,8 @@ final class IncidentFormViewModel {
             location = incident.location
             details = incident.details
             date = incident.date
-            imageURLText = incident.imageURL?.absoluteString ?? ""
+            imageData = incident.imageData
+            imageURL = incident.imageURL
             coordinate = incident.coordinate
         }
     }
@@ -67,21 +76,44 @@ final class IncidentFormViewModel {
         isEditing ? "Edytuj zgłoszenie" : "Nowe zgłoszenie"
     }
 
-    var isImageURLValid: Bool {
-        let text = trimmed(imageURLText)
-        guard !text.isEmpty else { return true }
-        guard let url = URL(string: text), let scheme = url.scheme else { return false }
-        return scheme == "http" || scheme == "https"
-    }
+    var hasImage: Bool { imageData != nil || imageURL != nil }
 
     var isValid: Bool {
         !trimmed(line).isEmpty
         && !trimmed(location).isEmpty
         && !trimmed(details).isEmpty
-        && isImageURLValid
+        && !isLoadingPhoto
     }
 
-    // MARK: - Adres z mapy
+    func loadSelectedPhoto() {
+        photoLoadTask?.cancel()
+        guard let item = photoSelection else { return }
+
+        isLoadingPhoto = true
+        photoLoadFailed = false
+        photoLoadTask = Task { @MainActor [self] in
+            let rawData = try? await item.loadTransferable(type: Data.self)
+            guard !Task.isCancelled else { return }
+            isLoadingPhoto = false
+
+            guard let rawData,
+                  let compressed = ImageCompressor.compressedJPEG(from: rawData) else {
+                photoLoadFailed = true
+                return
+            }
+            imageData = compressed
+            imageURL = nil
+        }
+    }
+
+    func removePhoto() {
+        photoLoadTask?.cancel()
+        photoSelection = nil
+        imageData = nil
+        imageURL = nil
+        isLoadingPhoto = false
+        photoLoadFailed = false
+    }
 
     func resolveInitialAddress() {
         if resolvesAddressOnAppear { resolveAddress() }
@@ -118,9 +150,6 @@ final class IncidentFormViewModel {
 
     @discardableResult
     func save(in context: ModelContext) -> Incident {
-        let text = trimmed(imageURLText)
-        let url = text.isEmpty ? nil : URL(string: text)
-
         let incident: Incident
         if let existing {
             incident = existing
@@ -130,7 +159,8 @@ final class IncidentFormViewModel {
             incident.location = trimmed(location)
             incident.details = trimmed(details)
             incident.date = date
-            incident.imageURL = url
+            incident.imageData = imageData
+            incident.imageURL = imageURL
             incident.latitude = coordinate.latitude
             incident.longitude = coordinate.longitude
         } else {
@@ -141,7 +171,8 @@ final class IncidentFormViewModel {
                 location: trimmed(location),
                 details: trimmed(details),
                 date: date,
-                imageURL: url,
+                imageData: imageData,
+                imageURL: imageURL,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude
             )

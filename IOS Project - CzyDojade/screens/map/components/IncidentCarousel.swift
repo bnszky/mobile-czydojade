@@ -10,7 +10,7 @@ struct IncidentCarousel: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: Theme.Spacing.carousel) {
                 ForEach(incidents) { incident in
-                    IncidentCardView(incident: incident) {
+                    IncidentCard(incident: incident) {
                         onEdit(incident)
                     }
                     .containerRelativeFrame(.horizontal) { length, _ in length - 40 }

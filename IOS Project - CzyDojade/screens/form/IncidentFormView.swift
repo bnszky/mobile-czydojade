@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import PhotosUI
 import SwiftData
 
 struct IncidentFormView: View {
@@ -109,7 +110,7 @@ struct IncidentFormView: View {
             }
             .frame(height: Theme.Size.cardImageHeight)
             .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.formMedia, style: .continuous))
-            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+            .listRowInsets(Theme.Insets.formMedia)
         } header: {
             Text("Miejsce")
         } footer: {
@@ -133,35 +134,38 @@ struct IncidentFormView: View {
 
     private var imageSection: some View {
         Section {
-            TextField("Adres zdjęcia (https://…)", text: $viewModel.imageURLText)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .keyboardType(.URL)
+            if viewModel.isLoadingPhoto {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            } else if viewModel.hasImage {
+                IncidentPhoto(imageData: viewModel.imageData, imageURL: viewModel.imageURL)
+                    .frame(height: Theme.Size.formImagePreviewHeight)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.formMedia, style: .continuous))
+                    .listRowInsets(Theme.Insets.formMedia)
+            }
 
-            if let url = URL(string: viewModel.imageURLText), viewModel.isImageURLValid,
-               !viewModel.imageURLText.isEmpty {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure:
-                        Label("Nie udało się wczytać zdjęcia", systemImage: "photo")
-                            .foregroundStyle(.secondary)
-                    default:
-                        ProgressView()
-                    }
+            PhotosPicker(selection: $viewModel.photoSelection, matching: .images) {
+                Label(
+                    viewModel.hasImage ? "Zmień zdjęcie" : "Wybierz z galerii",
+                    systemImage: "photo.on.rectangle"
+                )
+            }
+
+            if viewModel.hasImage {
+                Button("Usuń zdjęcie", role: .destructive) {
+                    viewModel.removePhoto()
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 140)
-                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.formMedia, style: .continuous))
             }
         } header: {
             Text("Zdjęcie (opcjonalne)")
         } footer: {
-            if !viewModel.isImageURLValid {
-                Text("Podaj poprawny adres zaczynający się od http lub https.")
+            if viewModel.photoLoadFailed {
+                Text("Nie udało się wczytać zdjęcia. Spróbuj wybrać inne.")
                     .foregroundStyle(.red)
             }
+        }
+        .onChange(of: viewModel.photoSelection) {
+            viewModel.loadSelectedPhoto()
         }
     }
 
