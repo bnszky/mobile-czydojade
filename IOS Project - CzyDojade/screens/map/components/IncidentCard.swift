@@ -3,7 +3,6 @@ import SwiftUI
 struct IncidentCard: View {
 
     let incident: Incident
-    var onEdit: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -25,18 +24,6 @@ struct IncidentCard: View {
             .frame(height: Theme.Size.cardImageHeight)
             .overlay(alignment: .topTrailing) {
                 InfoBadge(icon: "tram.fill", text: incident.vehicleLabel).padding(Theme.Spacing.cardOverlay)
-            }
-            .overlay(alignment: .topLeading) {
-                if let onEdit {
-                    Button(action: onEdit) {
-                        Image(systemName: "pencil")
-                            .font(.system(size: Theme.FontSize.cardEditIcon, weight: .semibold))
-                            .foregroundStyle(Theme.Colors.accent)
-                            .frame(width: Theme.Size.cardEdit, height: Theme.Size.cardEdit)
-                            .background(Theme.Colors.surface, in: Circle())
-                    }
-                    .padding(Theme.Spacing.cardOverlay)
-                }
             }
     }
 
@@ -69,6 +56,6 @@ struct IncidentCard: View {
 }
 
 #Preview {
-    IncidentCard(incident: Incident.makeSamples()[0], onEdit: {})
+    IncidentCard(incident: Incident.makeSamples()[0])
         .padding()
 }

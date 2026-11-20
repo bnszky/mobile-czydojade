@@ -7,20 +7,21 @@ enum Theme {
         static let surface = Color.white
         static let accentSoft = Color.blue.opacity(0.12)
         static let badgeText = Color.black.opacity(0.85)
+        static let fieldBackground = Color(.tertiarySystemFill)
         static let screenBackground = Color(.systemGroupedBackground)
     }
 
     enum Size {
         static let mapControl: CGFloat = 50
         static let tabAdd: CGFloat = 60
-        static let cardEdit: CGFloat = 32
         static let cardImageHeight: CGFloat = 200
         static let formImagePreviewHeight: CGFloat = 200
         static let markerIcon: CGFloat = 14
         static let markerPadding: CGFloat = 8
-        static let categoryIconSmall: CGFloat = 22
+        static let categoryIconMedium: CGFloat = 28
         static let categoryIconLarge: CGFloat = 30
         static let toolbarButton: CGFloat = 44
+        static let searchField: CGFloat = 40
     }
 
     enum Ratio {
@@ -35,7 +36,6 @@ enum Theme {
         static let tabLabel: CGFloat = 11
         static let cardTitle: CGFloat = 17
         static let cardBody: CGFloat = 14
-        static let cardEditIcon: CGFloat = 14
         static let badge: CGFloat = 12
         static let toolbarIcon: CGFloat = 18
     }
@@ -60,6 +60,10 @@ enum Theme {
         static let rowContent: CGFloat = 12
         static let rowText: CGFloat = 4
         static let rowMeta: CGFloat = 8
+        static let listHeader: CGFloat = 10
+        static let chips: CGFloat = 8
+        static let chipHorizontal: CGFloat = 12
+        static let chipVertical: CGFloat = 6
     }
 
     enum Insets {

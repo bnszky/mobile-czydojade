@@ -9,6 +9,7 @@ struct MapScreenView: View {
     @AppStorage("didSeedIncidents") private var didSeed = false
 
     @State private var viewModel = MapViewModel()
+    @State private var listViewModel = IncidentListViewModel()
     @State private var position: MapCameraPosition = .region(MapViewModel.wroclawRegion)
     @State private var showSatellite = false
     @State private var tab: AppTab = .map
@@ -35,7 +36,12 @@ struct MapScreenView: View {
         .mapControls { }
         .overlay {
             if tab == .list {
-                IncidentListView(incidents: incidents, onSelect: { viewModel.startEdit($0) })
+                IncidentListView(
+                    viewModel: listViewModel,
+                    incidents: incidents,
+                    userLocation: viewModel.location.currentLocation,
+                    onSelect: { viewModel.startEdit($0) }
+                )
             }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) { bottomArea }

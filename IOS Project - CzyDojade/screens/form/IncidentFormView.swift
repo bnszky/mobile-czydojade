@@ -121,15 +121,21 @@ struct IncidentFormView: View {
     private var eventSection: some View {
         Section("Zdarzenie") {
             LabeledContent("Kategoria") {
-                HStack {
-                    CategoryIcon(category: viewModel.category, size: Theme.Size.categoryIconSmall)
+                Menu {
                     Picker("Kategoria", selection: $viewModel.category) {
                         ForEach(IncidentCategory.allCases) { category in
                             Label(category.title, systemImage: category.systemImage)
                                 .tag(category)
                         }
                     }
-                    .labelsHidden()
+                } label: {
+                    HStack(spacing: Theme.Spacing.rowMeta) {
+                        CategoryIcon(category: viewModel.category, size: Theme.Size.categoryIconMedium)
+                        Text(viewModel.category.title)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.footnote)
+                    }
+                    .foregroundStyle(.secondary)
                 }
             }
             TextField("Opis", text: $viewModel.details, axis: .vertical)

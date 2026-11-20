@@ -6,7 +6,11 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private let manager = CLLocationManager()
 
-    var coordinate: CLLocationCoordinate2D?
+    var currentLocation: CLLocation?
+
+    var coordinate: CLLocationCoordinate2D? {
+        currentLocation?.coordinate
+    }
 
     override init() {
         super.init()
@@ -35,7 +39,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        coordinate = locations.last?.coordinate
+        currentLocation = locations.last
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {}

@@ -131,19 +131,9 @@ final class IncidentFormViewModel {
             let placemarks = (try? await CLGeocoder().reverseGeocodeLocation(point)) ?? []
             guard !Task.isCancelled,
                   let placemark = placemarks.first,
-                  let address = Self.format(placemark) else { return }
+                  let address = placemark.shortAddress else { return }
             location = address
         }
-    }
-
-    private static func format(_ placemark: CLPlacemark) -> String? {
-        let street = [placemark.thoroughfare, placemark.subThoroughfare]
-            .compactMap { $0 }
-            .joined(separator: " ")
-        let parts = [placemark.subLocality ?? placemark.locality,
-                     street.isEmpty ? nil : street]
-            .compactMap { $0 }
-        return parts.isEmpty ? nil : parts.joined(separator: ", ")
     }
 
     // MARK: - SwiftData
